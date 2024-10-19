@@ -15,7 +15,7 @@ git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_A as --dep
 curl -SL http://raw.github.com/zhlhlf/text/main/ssh.sh | sudo bash
 ```
 ```
-aria2c -x10 http://47.115.224.103:5244/d/5tb/%E4%B8%B4%E6%97%B6%E5%AD%98%E6%94%BE%E6%96%87%E4%BB%B6/fw-oplus9r-oos14-601.zip -o asd.zip >/dev/null 2>&1 ; rm -rf firmware-update ; unzip -qo asd.zip ; rm -rf asd.zip ; 
+aria2c -x10 url -o asd.zip >/dev/null 2>&1 ; rm -rf firmware-update ; unzip -qo asd.zip ; rm -rf asd.zip ; 
 ```
 ```
 git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_ab as --depth=1 ; cp -r as/* ./ ; rm -r as ;
