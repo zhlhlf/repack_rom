@@ -1,5 +1,8 @@
 # 一些依赖的环境变量 将以. ./config方式导入  所有此文件为sh文件
 
+# 时区
+TZ='Asia/Shanghai'
+
 # 关闭系统apk签名校验 为 true 生效
 closeSystemApkSingnCheck=false
 
