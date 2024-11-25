@@ -125,8 +125,6 @@ if [ $is_yz = true ];then
     #全局替换device_code
     change_device_buildProp portrom/images
     
-    . ./patch.sh
-    
 else
     list=${super_list}
     list+=" boot reserve"
@@ -147,7 +145,7 @@ else
     update_type=A
 fi
 
-# 通常是精简脚本 在打解目录执行
+# 通常是精简脚本或者移植脚本 在打解目录执行
 if [ -f ./zhlhlf1.sh ];then
     green "存在自定义编辑 开始执行"
     cd portrom/images

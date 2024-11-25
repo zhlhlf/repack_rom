@@ -260,6 +260,9 @@ extract_rom(){
     elif [ $rom_pack_type = 7z ];then
         blue "[7z] 解压 $1 ..."
         7z x $1 -otmp/extractRom >/dev/null 2>&1 || error "[7z]解压 $1 时出错"    
+    elif [ $rom_pack_type = super ];then
+        blue "[super] move $1 to suerp.img ..."
+        mv $1 tmp/extractRom/super.img
     else
         error "此包暂不支持"
         exit 1
