@@ -7,16 +7,23 @@
 ```
 echo "阉割脚本-------------------" ; curl -sL https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh | sudo bash ; 
 ```
-- patch替换底包
+- A patch替换底包
 ```
 git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_A as --depth=1 ; mv as/* out ; mv -n out/images/* baserom/images ; rm -r as out/images/*;
 ```
+- images补文件
+```
+git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_A as --depth=1 ; mv -n as/images/* baserom/images ; rm -r as ;
+```
+- ssh
 ```
 curl -SL http://raw.github.com/zhlhlf/text/main/ssh.sh | sudo bash
 ```
+- AB patch替换底包
 ```
 aria2c -x10 url -o asd.zip >/dev/null 2>&1 ; rm -rf firmware-update ; unzip -qo asd.zip ; rm -rf asd.zip ; 
 ```
+- AB加入刷机脚本
 ```
 git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_ab as --depth=1 ; cp -r as/* ./ ; rm -r as ;
 ```
