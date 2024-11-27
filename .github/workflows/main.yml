@@ -79,4 +79,4 @@ jobs:
               
         - name: 上传onedrive
           run: |
-              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} tyy2/临时存放文件
+              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} 
