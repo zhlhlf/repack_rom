@@ -79,4 +79,4 @@ jobs:
               
         - name: 上传onedrive
           run: |
-              wget -q https://raw.githubusercontent.com/zhlhlf/text/main/onedrive_mount.sh && sudo sh onedrive_mount.sh ${{ secrets.RCK }} 临时存放文件
+              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} tyy2/临时存放文件
