@@ -73,7 +73,7 @@ if [ ! -f baserom/images/boot.img ];then
         boot_file=`find baserom/images -name $i | awk 'NR==1'`
         if [ "$boot_file" ];then
             z=1
-            yellow "没在底包中不存在boot.img 但是存在 $boot_file"
+            yellow "底包中不存在boot.img 但是有 $boot_file"
             mv -f $boot_file baserom/images/boot.img
             break
         fi
@@ -262,14 +262,17 @@ green "要打包为zip的文件目录树"
 green "---------------------"
 du -h `find -type f`
 green "---------------------"
-zip -qr out.zip *
+
+#多线程压缩 加快速度
+7z a -tzip -mmt=on out.zip * >> /dev/null
+
 time=$(date +"%Y-%m-%d")
-hash=$(md5sum out.zip | head -c 10)
+hash=$(md5sum out.zip | head -c 5)
 
 if [ $is_yz = true ];then
-    mv out.zip ${base_product_device}_${update_type}_${os_type}_${port_rom_version}_from_${port_product_device}_${pack_type}_${time}.zip
+    mv out.zip ${base_product_device}_${update_type}_${port_rom_version}_from_${port_product_device}_${pack_type}_${time}_${hash}.zip
 else
-    mv out.zip ${base_product_device}_${update_type}_${os_type}_${base_rom_version}_${pack_type}_${time}.zip
+    mv out.zip ${base_product_device}_${update_type}_${base_rom_version}_${pack_type}_${time}_${hash}.zip
 fi
 
 cd ..

@@ -29,6 +29,4 @@ base_rom_density=380
 
 build_user="zhlhlf"
 
-os_type="ColorOS"
-
 is_eu_rom=false
