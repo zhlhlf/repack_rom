@@ -149,7 +149,7 @@ fi
 if [ -f ./zhlhlf1.sh ];then
     green "存在自定义编辑 开始执行"
     cd portrom/images
-    . ../../zhlhlf1.sh
+    . ../../zhlhlf1.sh | tee out/edit.txt
     cd ../../
 else
     yellow "自定义编辑脚本不存在"
@@ -250,6 +250,7 @@ green "edit vbmeta.img 关闭avb校验"
 patch-vbmeta.py out/images/vbmeta.img
 
 cd out
+echo "by zhlhlf" >> edit.txt
 # 在打包zip之前执行
 if [ -f ../zhlhlf2.sh ];then
     green "存在自定义编辑 开始执行"
