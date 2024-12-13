@@ -149,7 +149,7 @@ fi
 if [ -f ./zhlhlf1.sh ];then
     green "存在自定义编辑 开始执行"
     cd portrom/images
-    . ../../zhlhlf1.sh | tee out/edit.txt
+    . ../../zhlhlf1.sh | tee -a ../../out/edit.txt
     cd ../../
 else
     yellow "自定义编辑脚本不存在"
