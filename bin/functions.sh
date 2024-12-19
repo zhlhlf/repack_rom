@@ -2,6 +2,8 @@
 
 work_dir=$(pwd)
 
+APKEditor="bin/apktool/APKEditor.jar"
+
 # Define color output function
 error() {
     if [ "$#" -eq 2 ]; then
@@ -361,7 +363,7 @@ patch1_jar(){
     rm -rf tmp/$name/
     mkdir -p tmp/$name/
     cp -rf $1 tmp/$name.jar
-    java -jar bin/apktool/APKEditor.jar d -f -i tmp/$name.jar -o tmp/$name > /dev/null 2>&1 || (error "解包tmp/$name.jar失败" ; return)
+    java -jar $APKEditor d -f -i tmp/$name.jar -o tmp/$name > /dev/null 2>&1 || (error "解包tmp/$name.jar失败" ; return)
 
     paths=""
     for i in $2
@@ -377,65 +379,11 @@ patch1_jar(){
         patchmethod.py $file $3
     done
 
-    java -jar bin/apktool/APKEditor.jar b -f -i tmp/$name -o tmp/${name}_patched.jar > /dev/null 2>&1 || (error "打包tmp/$name.jar失败" ; return)
+    java -jar $APKEditor b -f -i tmp/$name -o tmp/${name}_patched.jar > /dev/null 2>&1 || (error "打包tmp/$name.jar失败" ; return)
     cp -rf tmp/${name}_patched.jar $1
     rm -r tmp
 }
 
-# $1 jar文件位置
-# $2 查找目录
-# $3 patch的方法
-# patch1_jar(){
-
-#     if [ $is_eu_rom == "true" ]; then
-#        SMALI_COMMAND="java -jar bin/apktool/smali-3.0.5.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali-3.0.5.jar" 
-#     else
-#        SMALI_COMMAND="java -jar bin/apktool/smali.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali.jar"
-#     fi
-
-#     infile=$1
-#     if [ -f $infile ];then
-#         filename=$(basename $infile)
-#         name=${filename%.*}
-#         rm -rf tmp
-#         mkdir -p tmp/$name/
-#         cp -rf $infile tmp
-#         7z x -y tmp/$filename *.dex -otmp/$name >/dev/null
-#         for dexfile in tmp/$name/*.dex;do
-#             smalifname=${dexfile%.*}
-#             smalifname=$(echo $smalifname | cut -d "/" -f 3)
-#             ${BAKSMALI_COMMAND} d --api ${port_android_sdk} ${dexfile} -o tmp/$name/$smalifname 2>&1 || (error " Baksmaling 失败" ; return)
-#             rm -r $dexfile
-#         done
-
-#         paths=""
-#         for i in $2
-#         do
-#             hh="tmp/$name/*/$i"
-#             paths+="$hh "
-#         done
-
-#         #Coloros 系统的该方法位置
-#         files=$(find $paths -type f -name "*.smali")
-
-#         for file in $files; do
-#             patchmethod.py $file $3
-#         done
-
-
-#         for smalidir in $(ls tmp/$name);do
-#             ${SMALI_COMMAND} a --api ${port_android_sdk} tmp/$name/${smalidir} -o tmp/${smalidir}.dex 2>&1 || (error " Baksmaling 失败" ; return)
-#         done
-#         cd tmp
-#         7z a -y -mx0 -tzip $filename *.dex  > /dev/null 2>&1 || (error "修改$filename失败" ; return)
-#         cd ../
-#         mv -f tmp/$filename $infile
-#         rm -r tmp
-#     fi
-
-# }
 
 # $1 jar文件位置
 # $2 查找目录
@@ -447,7 +395,7 @@ patch2_jar(){
     rm -rf tmp/$name/
     mkdir -p tmp/$name/
     cp -rf $1 tmp/$name.jar
-    java -jar bin/apktool/APKEditor.jar d -f -i tmp/$name.jar -o tmp/$name  > /dev/null 2>&1
+    java -jar $APKEditor d -f -i tmp/$name.jar -o tmp/$name  > /dev/null 2>&1
 
     paths=""
     for i in $2
@@ -469,71 +417,11 @@ patch2_jar(){
         fi
     done
 
-    java -jar bin/apktool/APKEditor.jar b -f -i tmp/$name -o tmp/${name}_patched.jar > /dev/null 2>&1
+    java -jar $APKEditor b -f -i tmp/$name -o tmp/${name}_patched.jar > /dev/null 2>&1
     cp -rf tmp/${name}_patched.jar $1
     rm -r tmp
 }
 
-
-# $1 jar文件位置
-# $2 查找目录
-# $3 patch的方法的调用
-# 把调用返回置为0
-# patch2_jar(){
-#     port_android_sdk=34
-#     if [ $is_eu_rom == "true" ]; then
-#        SMALI_COMMAND="java -jar bin/apktool/smali-3.0.5.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali-3.0.5.jar" 
-#     else
-#        SMALI_COMMAND="java -jar bin/apktool/smali.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali.jar"
-#     fi
-
-#     infile=$1
-#     if [ -f $infile ];then
-#         filename=$(basename $infile)
-#         name=${filename%.*}
-#         rm -rf tmp
-#         mkdir -p tmp/$name/
-#         cp -rf $infile tmp
-#         7z x -y tmp/$filename *.dex -otmp/$name >/dev/null
-#         for dexfile in tmp/$name/*.dex;do
-#             smalifname=${dexfile%.*}
-#             smalifname=$(echo $smalifname | cut -d "/" -f 3)
-#             ${BAKSMALI_COMMAND} d --api ${port_android_sdk} ${dexfile} -o tmp/$name/$smalifname 2>&1 || error " Baksmaling 失败"
-#             rm -r $dexfile
-#         done
-
-#         paths=""
-#         for i in $2
-#         do
-#             hh="tmp/$name/*/$i"
-#             paths+="$hh "
-#         done
-
-#         files=$(find $paths -type f -name "*.smali")
-#         for i in $files; do
-#             x=`grep -n "$3" "$i" | cut -d ':' -f 1`
-#             if [ "$x" ];then
-#                 yellow "$i patched"
-#                 x1=$((x+2))
-#                 reg=`sed -n ${x1}p $i | cut -d 't' -f 2`
-#                 sed -i "${x1}i\\\tconst/4 $reg, 0x0" $i
-#                 sed -i "${x}d" $i
-#                 sed -i "${x1}d" $i
-#             fi
-#         done
-
-#         for smalidir in $(ls tmp/$name);do
-#             ${SMALI_COMMAND} a --api ${port_android_sdk} tmp/$name/${smalidir} -o tmp/${smalidir}.dex 2>&1 || (error " Baksmaling 失败" ; return)
-#         done
-#         cd tmp
-#         7z a -y -mx0 -tzip $filename *.dex  > /dev/null 2>&1 || (error "修改$filename失败" ; return)
-#         cd ../
-#         mv -f tmp/$filename $infile
-#         rm -r tmp
-#     fi
-# }
 
 # Replace Smali code in an APK or JAR file, without supporting resource patches.
 # $1: apk文件位置  例如portrom/images/system/system.apk
@@ -546,7 +434,7 @@ patch_smali(){
     rm -rf tmp/$name/
     mkdir -p tmp/$name/
     cp -rf $1 tmp/$name.apk
-    java -jar bin/apktool/APKEditor.jar d -f -i tmp/$name.apk -o tmp/$name  > /dev/null 2>&1
+    java -jar $APKEditor d -f -i tmp/$name.apk -o tmp/$name  > /dev/null 2>&1
 
     paths=""
     for i in $2
@@ -564,87 +452,12 @@ patch_smali(){
         sed -i "s/$3/$4/g" $targetsmali
     done
 
-    java -jar bin/apktool/APKEditor.jar b -f -i tmp/$name -o tmp/${name}_patched.apk > /dev/null 2>&1
+    java -jar $APKEditor b -f -i tmp/$name -o tmp/${name}_patched.apk > /dev/null 2>&1
     zipalign -p -f -v 4 tmp/${name}_patched.apk tmp/${name}_sign.apk > /dev/null 2>&1 || (error "zipalign错误，请检查原因。" ; return)
     cp -rf tmp/${name}_sign.apk $1
     rm -r tmp
 }
 
-# Replace Smali code in an APK or JAR file, without supporting resource patches.
-# $1: apk文件位置  例如portrom/images/system/system.apk
-# $2: Target Smali file (supports relative paths for Smali files)
-# $3: Value to be replaced
-# $4: Replacement value
-# patch_smali() {
-#     if [[ $is_eu_rom == "true" ]]; then
-#        SMALI_COMMAND="java -jar bin/apktool/smali-3.0.5.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali-3.0.5.jar" 
-#     else
-#        SMALI_COMMAND="java -jar bin/apktool/smali.jar"
-#        BAKSMALI_COMMAND="java -jar bin/apktool/baksmali.jar"
-#     fi
-#     infile=$1
-#     if [ -f $infile ];then
-#         filename=$(basename $infile)
-#         yellow "正在修改 $filename" "Modifying $filename"
-#         name=${filename%.*}
-#         rm -rf tmp/$name/
-#         mkdir -p tmp/$name/
-#         cp -rf $infile tmp/$name/
-#         7z x -y tmp/$name/$filename *.dex -otmp/$name >/dev/null
-#         for dexfile in tmp/$name/*.dex;do
-#             smalifname=${dexfile%.*}
-#             smalifname=$(echo $smalifname | cut -d "/" -f 3)
-#             ${BAKSMALI_COMMAND} d --api ${port_android_sdk} ${dexfile} -o tmp/$name/$smalifname 2>&1 || (error " Baksmaling 失败" ; return)
-#             ${SMALI_COMMAND} a --api ${port_android_sdk} tmp/$name/${smalidir} -o tmp/$name/${smalidir}.dex > /dev/null 2>&1 || (error " Baksmaling 失败" ; return) 
-          
-#         done
-
-#         search_paths=""
-#         for i in $2
-#         do
-#             hh="tmp/$name/*/$i"
-#             search_paths+="$hh "
-#         done
-
-#         targetsmalis=$(find $search_paths -type f)
-#         for targetsmali in $targetsmalis
-#         do
-#             if [ ! "cat $targetsmali | grep ${search_pattern}" ];then
-#                 continue
-#             fi
-#             smalidir=$(echo $targetsmali |cut -d "/" -f 3)
-#             yellow "patch ${targetsmali} ..."
-#             search_pattern=$3
-#             repalcement_pattern=$4
-#             if [[ $5 == 'regex' ]];then
-#                  sed -i "/${search_pattern}/c\\${repalcement_pattern}" $targetsmali
-#             else
-#                 sed -i "s/$search_pattern/$repalcement_pattern/g" $targetsmali
-#             fi
-#             ${SMALI_COMMAND} a --api ${port_android_sdk} tmp/$name/${smalidir} -o tmp/$name/${smalidir}.dex > /dev/null 2>&1 || (error " Baksmaling 失败" ; return)
-#             pushd tmp/$name/ >/dev/null || exit
-#             7z a -y -mx0 -tzip $filename ${smalidir}.dex  > /dev/null 2>&1 || (error "修改$filename失败" ; return)
-#             popd >/dev/null || exit
-#         done
-
-#         yellow "修补$filename 完成"
-#         if [[ $filename == *.apk ]]; then
-#             yellow "检测到apk，进行zipalign处理。。"
-#             rm -rf ${infile}
-
-#             # Align moddified APKs, to avoid error "Targeting R+ (version 30 and above) requires the resources.arsc of installed APKs to be stored uncompressed and aligned on a 4-byte boundary" 
-#             zipalign -p -f -v 4 tmp/$name/$filename ${infile} > /dev/null 2>&1 || error "zipalign错误，请检查原因。"
-#             yellow "apk zipalign处理完成"
-#             yellow "复制APK到目标位置：${infile}"
-#         else
-#             yellow "复制修改文件到目标位置：${infile}"
-#             cp -rf tmp/$name/$filename ${infile}
-#         fi
-#     else
-#         error "Failed to find $1,please check it manually".
-#     fi
-# }
 
 # $1 镜像输入
 # $2 解包至
