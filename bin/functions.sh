@@ -2,7 +2,7 @@
 
 work_dir=$(pwd)
 
-APKEditor="bin/apktool/APKEditor.jar"
+APKEditor="$work_dir/bin/apktool/APKEditor.jar"
 
 # Define color output function
 error() {
