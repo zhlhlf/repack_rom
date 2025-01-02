@@ -8,6 +8,7 @@ fi
 
 if [ "$(uname -m)" == "x86_64" ] && [  "$(uname)" == "Linux" ];then
     echo "Device arch: Linux x86_64"
+    apt remove *jdk* -y
     apt update -y
     apt upgrade -y
     apt install -y aria2 python3 busybox zip unzip p7zip-full openjdk-21-jre zstd bc android-sdk-libsparse-utils xmlstarlet openssl python3-protobuf zipalign 
