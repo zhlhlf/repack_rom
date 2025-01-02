@@ -816,3 +816,23 @@ remove_feature() {
     done
 }
 
+#1 匹配的文件夹名称（不分大小写）
+#2 条例对应的应用名称
+de(){
+  oo=$(find */*app*/* -iname $1  -maxdepth 0)
+  oo+=" $(find */*/*app*/* -iname $1  -maxdepth 0)"
+
+ if [ "$oo" != " " ];then
+    for i in $oo
+    do
+      apk_dir=$(find $i -name "*.apk"  -maxdepth 0 | head -n 1)
+      if [ -z $apk_dir ];then
+        paackage_name=$(java -jar $APKEditor info -i $apk_dir | grep package | cut -d \" -f 2)
+      fi
+      out="删除 $i - $paackage_name - $2"
+      echo "$out" >> ../../../del_app-by-zhlhlf.txt
+      echo "$out"
+      rm -rf $i
+    done
+ fi
+}

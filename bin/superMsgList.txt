@@ -1,4 +1,4 @@
-default default 7516192768 VAB by-zhlhlf
-OnePlus9R A 9126805504 A by-zhlhlf
-OnePlus9R AB 7516192768 VAB by-zhlhlf
-OnePlus8T AB 7516192768 VAB by-zhlhlf
+default default 7516192768 VAB
+OnePlus9R A 9126805504 A
+OnePlus9R AB 7516192768 VAB
+OnePlus8T AB 7516192768 VAB
