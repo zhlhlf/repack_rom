@@ -10,9 +10,9 @@ if [ "$(uname -m)" == "x86_64" ] && [  "$(uname)" == "Linux" ];then
     echo "Device arch: Linux x86_64"
     apt update -y
     apt upgrade -y
-    apt install -y aria2 python3 busybox zip unzip p7zip-full openjdk-21-jre zstd bc android-sdk-libsparse-utils xmlstarlet openssl python3-protobuf
+    apt install -y aria2 python3 busybox zip unzip p7zip-full openjdk-21-jre zstd bc android-sdk-libsparse-utils xmlstarlet openssl python3-protobuf zipalign 
     if [ $? -ne 0 ];then
-        echo "安装可能出错，请手动执行：sudo apt install -y aria2 python3 busybox zip unzip p7zip-full openjdk-21-jre zstd bc android-sdk-libsparse-utils xmlstarlet openssl python3-protobuf"
+        echo "安装可能出错，请手动执行：sudo apt install -y aria2 python3 busybox zip unzip p7zip-full openjdk-21-jre zstd bc android-sdk-libsparse-utils xmlstarlet openssl python3-protobuf zipalign "
     fi
 fi
 
