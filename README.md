@@ -5,7 +5,7 @@
 ## 补丁
 - patch1精简
 ```
-echo "阉割脚本" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; wget $del_scripts -O del_scripts.sh ; . ./del_scripts.sh ; rm -r del_scripts.sh
+echo "阉割脚本" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; wget -q $del_scripts -O del_scripts.sh ; . ./del_scripts.sh ; rm -r del_scripts.sh ;
 ```
 - A patch替换底包
 ```
