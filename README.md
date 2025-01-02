@@ -5,7 +5,7 @@
 ## 补丁
 - patch1精简
 ```
-scripts_url="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; echo "阉割脚本: $scripts_url" ; . <(curl -sL $scripts_url) ;
+export scripts_url="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; echo "阉割脚本: $scripts_url" ; . <(curl -sL $scripts_url) ;
 ```
 - A patch替换底包
 ```
