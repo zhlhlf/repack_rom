@@ -23,18 +23,13 @@ on:
       patch_shell1:
         description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
         required: true
-        default: 'echo "阉割脚本" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; . <(curl -sL "$del_scripts" ) ; '
+        default: 'echo "阉割脚本" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; wget $del_scripts -O del_scripts.sh ; . ./del_scripts.sh ; rm -r del_scripts.sh'
 
       patch_shell2:
         description: '一些执行的脚本 会在打包zip前开始执行'
         required: true
         default: 'ls ; '
 
-      ssh:
-        description: 'ssh'
-        required: true
-        default: 'false'
-        type: boolean
 
 jobs:
     build:
@@ -67,16 +62,12 @@ jobs:
               cat > zhlhlf2.sh <<endl
               ${{ inputs.patch_shell2 }}
               endl
-
-              echo "sudo bash bin/start.sh \"${{ inputs.rom1 }}\" \"${{ inputs.rom2 }}\"" > ffff.sh
-              if [ ${{ inputs.ssh }} = "true" ];then
-                curl -SL http://raw.github.com/zhlhlf/text/main/ssh.sh | sudo bash
-              else
-                sudo bash ffff.sh
-              fi
+              
+              sudo bash bin/start.sh "${{ inputs.rom1 }}" "${{ inputs.rom2 }}"
+ 
               mkdir 666
               sudo mv `find out -name "*zip"` 666/
               
-        - name: 上传onedrive
+        - name: upload
           run: |
               curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} 
