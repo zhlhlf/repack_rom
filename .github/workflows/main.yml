@@ -23,7 +23,7 @@ on:
       patch_shell1:
         description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
         required: true
-        default: 'echo "阉割脚本-------------------" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; . <(curl -sL $del_scripts ) ; '
+        default: 'echo "阉割脚本" ; del_scripts="https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh" ; . <(curl -sL "$del_scripts" ) ; '
 
       patch_shell2:
         description: '一些执行的脚本 会在打包zip前开始执行'
