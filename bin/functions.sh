@@ -819,13 +819,13 @@ remove_feature() {
 #1 匹配的文件夹名称（不分大小写）
 #2 条例对应的应用名称
 de(){
-  oo=$(find */*app*/* -iname $1  -maxdepth 0)
-  oo+=" $(find */*/*app*/* -iname $1  -maxdepth 0)"
+  oo=$(find */*app*/* -maxdepth 0 -iname $1)
+  oo+=" $(find */*/*app*/* -maxdepth 0 -iname $1)"
 
  if [ "$oo" != " " ];then
     for i in $oo
     do
-        apk_dir=$(find $i -name "*.apk"  -maxdepth 0 | head -n 1)
+        apk_dir=$(ls $i/*apk | cut -d' ' -f 1)
         paackage_name=$(java -jar $APKEditor info -i $apk_dir | grep package | cut -d \" -f 2)
         out="删除 $i - $paackage_name - $2"
         echo "$out" >> ../../../del_app-by-zhlhlf.txt
@@ -843,7 +843,7 @@ keep-del-app(){
     if [ "$uu" ];then
       echo "    保留--- $i"
     else
-        apk_dir=$(find $i -name "*.apk"  -maxdepth 0 | head -n 1)
+        apk_dir=$(ls $i/*apk | cut -d' ' -f 1)
         paackage_name=$(java -jar $APKEditor info -i $apk_dir | grep package | cut -d \" -f 2)
         out="删除 $i - $paackage_name - $2"
         echo "$out" >> ../../../del_app-by-zhlhlf.txt
@@ -863,7 +863,7 @@ keep-del-app(){
         echo "name=\"$name\" info_1=\"0\" info_2=\"0\" location=\"del-app/$(basename $i)/$name\"" >> my_bigball/apkcerts.txt
         mv $i my_bigball/del-app/
       else
-        apk_dir=$(find $i -name "*.apk"  -maxdepth 0 | head -n 1)
+        apk_dir=$(ls $i/*apk | cut -d' ' -f 1)
         paackage_name=$(java -jar $APKEditor info -i $apk_dir | grep package | cut -d \" -f 2)
         out="删除 $i - $paackage_name - $2"
         echo "$out" >> ../../../del_app-by-zhlhlf.txt
