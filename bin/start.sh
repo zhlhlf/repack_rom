@@ -244,7 +244,7 @@ do
 done
 
 mv baserom/images/*.* out/firmware-update
-rm -rf portrom out/firmware-update/recovery.img 
+rm -rf portrom
 
 green "edit vbmeta.img 关闭avb校验"
 patch-vbmeta.py out/images/vbmeta.img

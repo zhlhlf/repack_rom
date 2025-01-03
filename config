@@ -13,7 +13,7 @@ remove_data_encrypt=true
 disable_avb_verify=true
 
 # 可能的super子分区列表
-super_list="vendor system product odm my_engineering system_ext my_product my_stock my_heytap my_company my_carrier my_region my_preload my_bigball my_manifest"
+super_list="vendor_dlkm vendor system product odm my_engineering system_ext my_product my_stock my_heytap my_company my_carrier my_region my_preload my_bigball my_manifest"
 
 # 是否打包为super
 make_super=true
