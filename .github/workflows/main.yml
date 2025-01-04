@@ -1,0 +1,73 @@
+
+name: Action
+
+on:
+  workflow_dispatch:
+
+    inputs:
+      rom1:
+        description: '底包url'
+        required: true
+        default: ''
+
+      rom2:
+        description: '目标包url'
+        required: true
+        default: 'a'
+
+      patch_shell0:
+        description: '一些执行的脚本 会分解rom为img后开始执行'
+        required: true
+        default: 'ls ; '
+
+      patch_shell1:
+        description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
+        required: true
+        default: 'echo "阉割脚本" ; . <(curl -sL https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh ) ;'
+
+      patch_shell2:
+        description: '一些执行的脚本 会在打包zip前开始执行'
+        required: true
+        default: 'ls ; '
+
+
+jobs:
+    build:
+      runs-on: ubuntu-20.04
+
+      steps:
+        - name: 更改交换空间并link构建空间
+          uses: zhlhlf/maximize-build-space@master
+          with:
+            swap-size-mb: 8192
+
+        - name: 获取本仓库源码
+          uses: actions/checkout@main
+          with:
+            fetch-depth: 1
+
+        - name: 操作
+          run: |  
+              df -h ./
+              sudo bash bin/setup.sh > /dev/null 2>&1
+
+              cat > zhlhlf0.sh <<endl
+              ${{ inputs.patch_shell0 }}
+              endl
+
+              cat > zhlhlf1.sh <<endl
+              ${{ inputs.patch_shell1 }}
+              endl
+
+              cat > zhlhlf2.sh <<endl
+              ${{ inputs.patch_shell2 }}
+              endl
+              
+              sudo bash bin/start.sh "${{ inputs.rom1 }}" "${{ inputs.rom2 }}"
+ 
+              mkdir 666
+              sudo mv `find out -name "*zip"` 666/
+              
+        - name: upload
+          run: |
+              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} 

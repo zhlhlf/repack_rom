@@ -1,0 +1,35 @@
+# 一些依赖的环境变量 将以. ./config方式导入  所有此文件为sh文件
+
+# 时区
+TZ='Asia/Shanghai'
+
+# 关闭系统apk签名校验 为 true 生效
+closeSystemApkSingnCheck=false
+
+# 移除data分区加密 为 true 生效
+remove_data_encrypt=true
+
+# 关闭avb验证 为 true 生效
+disable_avb_verify=true
+
+# 可能的super子分区列表
+super_list="vendor system system_ext product odm system_dlkm vendor_dlkm my_engineering my_product my_stock my_heytap my_company my_carrier my_region my_preload my_bigball my_manifest"
+
+# 放入images的文件 bootFiles
+boot_images="boot init_boot vendor_boot"
+
+# 是否打包为super
+make_super=true
+
+# VAB的super启动的slot
+super_slot=a
+
+# 打包的镜像类型 erofs ext auto(按原镜像类型)
+pack_type=auto
+
+#如果为空不进行更改
+base_rom_density=380
+
+build_user="zhlhlf"
+
+is_eu_rom=false
