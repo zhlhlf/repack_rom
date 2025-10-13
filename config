@@ -16,7 +16,7 @@ disable_avb_verify=false
 possible_super_list="vendor system system_ext product odm *_dlkm my_*"
 
 # 是否打包为super
-make_super=false
+make_super=true
 
 # VAB的super启动的slot
 super_slot=a
