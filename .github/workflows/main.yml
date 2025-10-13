@@ -58,7 +58,9 @@ jobs:
         - name: 操作
           run: |  
               df -h ./
-              sudo bash bin/setup.sh > /dev/null 2>&1
+              # 创建命名管道
+              sudo mkfifo /env_yes
+              sudo bash bin/setup.sh > /dev/null 2>&1 &
 
               cat > zhlhlf0.sh <<endl
               ${{ inputs.patch_shell0 }}
