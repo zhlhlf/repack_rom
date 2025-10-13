@@ -10,16 +10,13 @@ closeSystemApkSingnCheck=false
 remove_data_encrypt=true
 
 # 关闭avb验证 为 true 生效
-disable_avb_verify=true
+disable_avb_verify=false
 
-# 可能的super子分区列表
-super_list="vendor system system_ext product odm system_dlkm vendor_dlkm my_engineering my_product my_stock my_heytap my_company my_carrier my_region my_preload my_bigball my_manifest"
-
-# 放入images的文件 bootFiles
-boot_images="boot init_boot vendor_boot"
+# 可能的super子分区列表 模糊匹配
+possible_super_list="vendor system system_ext product odm *_dlkm my_*"
 
 # 是否打包为super
-make_super=true
+make_super=false
 
 # VAB的super启动的slot
 super_slot=a
@@ -28,8 +25,9 @@ super_slot=a
 pack_type=auto
 
 #如果为空不进行更改
-base_rom_density=380
+base_rom_density=
+
+# 分解img 为 true 生效  默认 true
+extract_img=true
 
 build_user="zhlhlf"
-
-is_eu_rom=false

@@ -12,28 +12,37 @@ on:
 
       rom2:
         description: '目标包url'
-        required: true
-        default: 'a'
+        required: false
+        default: ''
 
       patch_shell0:
         description: '一些执行的脚本 会分解rom为img后开始执行'
-        required: true
-        default: 'ls ; '
+        required: false
+        default: ''
 
       patch_shell1:
         description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
-        required: true
+        required: false
         default: 'echo "阉割脚本" ; . <(curl -sL https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh ) ;'
 
       patch_shell2:
         description: '一些执行的脚本 会在打包zip前开始执行'
-        required: true
-        default: 'ls ; '
+        required: false
+        default: 'aria2c -x10 url -o asd.zip >/dev/null 2>&1 ; rm -rf firmware-update ; unzip -qo asd.zip ; rm -rf asd.zip ; '
 
+      zip_name:
+        description: ''
+        required: false
+        default: ''
+
+      upload:
+        description: '123 tyy2/short_time_files tyy2_crypt'
+        required: false
+        default: 'gg'
 
 jobs:
     build:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-latest
 
       steps:
         - name: 更改交换空间并link构建空间
@@ -66,8 +75,8 @@ jobs:
               sudo bash bin/start.sh "${{ inputs.rom1 }}" "${{ inputs.rom2 }}"
  
               mkdir 666
-              sudo mv `find out -name "*zip"` 666/
+              sudo mv `find out -name "*zip"` 666/${{ inputs.zip_name }}
               
         - name: upload
           run: |
-              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s ${{ secrets.RCK }} 
+              curl -sL https://raw.githubusercontent.com/zhlhlf/text/refs/heads/main/upload/upload.sh | bash -s "${{ secrets.RCK }}" "${{ inputs.upload }}"
