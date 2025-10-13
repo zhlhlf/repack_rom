@@ -189,7 +189,7 @@ if [ $extract_img = true ]; then
     mv -f portrom/images/out/*.img portrom/images/
 
     green "edit vbmeta.img 关闭avb校验"
-    patch-vbmeta.py portrom/images/vbmeta.img
+    patch-vbmeta.py baserom/images/vbmeta.img
 
 fi
 
