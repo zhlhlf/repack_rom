@@ -11,8 +11,6 @@ chmod 777 * -R
 # Import functions
 . ./bin/functions.sh
 
-check unzip aria2c 7z zip java zipalign python3 zstd bc xmlstarlet
-
 blue "正在清理文件" "Cleaning up.."
 rm -rf app tmp baserom portrom out
 
