@@ -207,7 +207,7 @@ if [ $make_super = true ]; then
     super_size=$(echo $data | awk '{print $3}')
     super_type=$(echo $data | awk '{print $4}')
 
-    make_super "$super_size" "portrom/images" "$super_list" "$super_type" "$super_slot"
+    make_super "portrom/images" "$super_list" "$super_type" "$super_slot"
 
     blue "正在压缩 super.img"
     zstd portrom/images/super.img -o out/images/super.zst

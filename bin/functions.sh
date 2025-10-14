@@ -181,11 +181,10 @@ repack_boot() {
 
 make_super() {
     yellow "start pack super.img..."
-    super_size=$1
-    super_dir="$2"
-    super_list="$3" #system ...
-    super_type=$4   #VAB or AB
-    super_slot=$5   #a or b
+    super_dir="$1"
+    super_list="$2" #system ...
+    super_type=$3   #VAB or AB
+    super_slot=$4   #a or b
 
     sSize=0
     super_group=qti_dynamic_partitions
@@ -211,10 +210,8 @@ make_super() {
     done
     yellow "super_type: $super_type  slot: $super_slot  set-size: ${super_size} allSize: $sSize"
 
-    if [ $sSize -gt $super_size ]; then
-        super_size=$(echo "$sSize / 1048576 * 1048576 + 1048576 * 16" | bc)
-        yellow "super_size < allSize  use new super_size: $super_size"
-    fi
+    super_size=$(echo "$sSize / 1048576 * 1048576 + 1048576 * 16" | bc)
+
     argvs+="--device super:$super_size "
     groupSize=$(echo "$super_size-1048576" | bc)
     if [ "$super_type" = "VAB" ] || [ "$super_type" = "AB" ]; then
