@@ -18,8 +18,12 @@ possible_super_list="vendor system system_ext product odm *_dlkm my_*"
 # 是否打包为super
 make_super=true
 
+# super打包类型
+super_type=VAB
+
 # VAB的super启动的slot
 super_slot=a
+
 
 # 打包的镜像类型 erofs ext auto(按原镜像类型)
 pack_type=auto

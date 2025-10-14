@@ -197,8 +197,6 @@ fi
 # 打包super
 if [ $make_super = true ]; then
 
-    super_type=VAB
-
     make_super "portrom/images" "$super_list" "$super_type" "$super_slot"
 
     blue "正在压缩 super.img"
