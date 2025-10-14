@@ -197,13 +197,7 @@ fi
 # 打包super
 if [ $make_super = true ]; then
 
-    data=$(grep "$base_product_device $update_type" bin/superMsgList.txt)
-    if [ ! "$data" ]; then
-        yellow "未找到 $base_product_device $update_type 机型打包super参数 将使用默认参数"
-        data=$(sed -n 1p bin/superMsgList.txt)
-    fi
-    super_size=$(echo $data | awk '{print $3}')
-    super_type=$(echo $data | awk '{print $4}')
+    super_type=VAB
 
     make_super "portrom/images" "$super_list" "$super_type" "$super_slot"
 
