@@ -119,7 +119,8 @@ else
     done
 
     # wait for env_yes 管道输入
-    read message < $env_yes
+    echo $env_yes
+    read message < /mnt/repack_rom/env_yes
 
     get_rom_msg portrom/images
 
