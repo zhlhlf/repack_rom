@@ -5,13 +5,13 @@ tools_dir=${work_dir}/bin/$(uname)/$(uname -m)
 export PATH=$PATH:$(pwd)/bin/pys:$(pwd)/bin/$(uname)/$(uname -m)/
 chmod 777 * -R
 
-check unzip aria2c 7z zip java zipalign python3 zstd bc xmlstarlet
-
 # 导入环境变量
 . ./config
 
 # Import functions
 . ./bin/functions.sh
+
+check unzip aria2c 7z zip java zipalign python3 zstd bc xmlstarlet
 
 blue "正在清理文件" "Cleaning up.."
 rm -rf app tmp baserom portrom out
