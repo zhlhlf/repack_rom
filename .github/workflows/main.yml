@@ -60,7 +60,7 @@ jobs:
               df -h ./
               # 创建命名管道
               export env_yes="$(pwd)/env_yes"
-              echo "节点管道路径 $env_yes"
+              echo "setup进程节点管道路径 $env_yes"
               sudo mkfifo $env_yes
               sudo bash bin/setup.sh > /dev/null 2>&1 && sudo echo 1 > $env_yes &
 
