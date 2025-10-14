@@ -28,7 +28,7 @@ on:
       patch_shell2:
         description: '一些执行的脚本 会在打包zip前开始执行'
         required: false
-        default: 'git clone https://github.com/zhlhlf/android_flash_scripts  as --depth=1 ; mv -n as/images/* baserom/images ; rm -r as ;'
+        default: 'git clone https://github.com/zhlhlf/android_flash_scripts as --depth=1 ; cp -r as/* ./ ; rm -r as ;'
 
       zip_name:
         description: ''
