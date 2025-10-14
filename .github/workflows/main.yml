@@ -23,12 +23,12 @@ on:
       patch_shell1:
         description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
         required: false
-        default: 'echo "阉割脚本" ; . <(curl -sL https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros14.sh ) ;'
+        default: 'echo "阉割脚本" ; . <(curl -sL https://raw.githubusercontent.com/zhlhlf/text/main/sys-del_project/coloros15.sh ) ;'
 
       patch_shell2:
         description: '一些执行的脚本 会在打包zip前开始执行'
         required: false
-        default: 'aria2c -x10 url -o asd.zip >/dev/null 2>&1 ; rm -rf firmware-update ; unzip -qo asd.zip ; rm -rf asd.zip ; '
+        default: 'git clone https://github.com/zhlhlf/android_flash_scripts  as --depth=1 ; mv -n as/images/* baserom/images ; rm -r as ;'
 
       zip_name:
         description: ''
