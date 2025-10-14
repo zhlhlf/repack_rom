@@ -59,7 +59,7 @@ jobs:
           run: |  
               df -h ./
               # 创建命名管道
-              env_yes="${pwd}/env_yes"
+              export env_yes="${pwd}/env_yes"
               sudo mkfifo $env_yes
               sudo bash bin/setup.sh > /dev/null 2>&1 && sudo echo 1 > $env_yes &
 
