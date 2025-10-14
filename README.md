@@ -21,7 +21,10 @@ git clone https://github.com/zhlhlf/android_flash_scripts as --depth=1 ; mv as/*
 ```
 git clone https://github.com/zhlhlf/android_flash_scripts -b oplus_9r_A as --depth=1 ; mv -n as/images/* baserom/images ; rm -r as ;
 ```
-
+```
+list="" ;
+ for i in $list;do aria2c -d baserom/images "$i" ; done
+```
 - ssh
 
 ```
