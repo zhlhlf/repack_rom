@@ -179,7 +179,7 @@ repack_boot() {
     cd $pwd
 }
 
-make_super() {
+make_super() { # 根据所有super_images大小设置super打包
     yellow "start pack super.img..."
     super_dir="$1"
     super_list="$2" #system ...

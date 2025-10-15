@@ -18,7 +18,7 @@ on:
       patch_shell0:
         description: '一些执行的脚本 会分解rom为img后开始执行'
         required: false
-        default: ''
+        default: '# extract_img=false ; make_super=false'
 
       patch_shell1:
         description: '一些执行的脚本 会在所有镜像解包后的所在目录下开始执行'
