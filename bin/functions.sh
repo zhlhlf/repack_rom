@@ -179,7 +179,7 @@ repack_boot() {
     cd $pwd
 }
 
-make_super() { # 根据所有super_images大小设置super打包
+make_super() {
     yellow "start pack super.img..."
     super_dir="$1"
     super_list="$2" #system ...
@@ -210,7 +210,10 @@ make_super() { # 根据所有super_images大小设置super打包
     done
     yellow "super_type: $super_type  slot: $super_slot  allSize: $sSize"
 
-    super_size=$(echo "$sSize / 1048576 * 1048576 + 1048576 * 16" | bc)
+    if [ -z $super_size ];then
+        super_size=$(echo "$sSize / 1048576 * 1048576 + 1048576 * 16" | bc)
+        green "自动计算 super_size: $super_size"
+    fi
 
     argvs+="--device super:$super_size "
     groupSize=$(echo "$super_size-1048576" | bc)
