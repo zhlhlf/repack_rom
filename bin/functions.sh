@@ -271,10 +271,10 @@ extract_rom() {
     rom_pack_type=$(gettype.py $1)
     if [ $rom_pack_type = zip ]; then
         blue "[zip] 解压 $1 ..."
-        unzip -qo $1 -d tmp/extractRom || error "[zip]解压 $1 时出错"
+        7z x $1 -otmp/extractRom -mmt=on -y >/dev/null || error "[zip]解压 $1 时出错"
     elif [ $rom_pack_type = 7z ]; then
         blue "[7z] 解压 $1 ..."
-        7z x $1 -otmp/extractRom >/dev/null 2>&1 || error "[7z]解压 $1 时出错"
+        7z x $1 -otmp/extractRom -mmt=on -y >/dev/null || error "[7z]解压 $1 时出错"
     elif [ $rom_pack_type = super ]; then
         blue "[super] move $1 to suerp.img ..."
         mv $1 tmp/extractRom/super.img
