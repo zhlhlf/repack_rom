@@ -79,7 +79,7 @@ jobs:
               sudo bash bin/start.sh "${{ inputs.rom1 }}" "${{ inputs.rom2 }}"
  
               mkdir 666
-              sudo mv `find out -name "*zip"` 666/${{ inputs.zip_name }}
+              sudo mv `find out -name "*zip"` 666/"${{ inputs.zip_name }}"
               
         - name: upload
           run: |
