@@ -340,7 +340,7 @@ extract_rom() {
             error "[super] 分解失败"
             exit 1
         )
-        rm -r $file
+        rm -r $file tmp/extractRom/super/*-cow.img
         for i in $(ls tmp/extractRom/super/*); do
             dataSize=$(du $i | cut -f 1)
             if [ $dataSize = 0 ]; then
@@ -351,7 +351,6 @@ extract_rom() {
             mv -n "$i" "$new_file"
         done
     fi
-
     find tmp/extractRom -name "*.img" >rom_image_list
     i=1
     while true; do
