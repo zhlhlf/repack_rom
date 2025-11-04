@@ -479,8 +479,6 @@ patch_smali() {
 # $1 镜像输入
 # $2 解包至
 extract_img() {
-# $2 解包至
-extract_img() {
     # 由环境变量extract_img 来决定是否分解镜像
     if [ ! $extract_img = true ]; then
         mv $1 $2
