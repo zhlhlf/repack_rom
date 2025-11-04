@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TZ='Asia/Shanghai'
+
 work_dir=$(pwd)
 
 APKEditor="$work_dir/bin/apktool/APKEditor.jar"
