@@ -112,7 +112,11 @@ if [ $is_yz = true ]; then
 
 else
     for im in $super_list; do
-        extract_img baserom/images/$im.img portrom/images
+        extract_img baserom/images/$im.img portrom/images &
+    done
+    wait
+
+    for im in $super_list; do
         rm -rf baserom/images/$im.img
     done
 
@@ -183,8 +187,9 @@ if [ $extract_img = true ]; then
 
     # 打包各镜像img
     for i in $(ls portrom/images --hide config); do
-        repack_img "portrom/images/$i" $pack_type
+        repack_img "portrom/images/$i" $pack_type &
     done
+    wait
 
     rm -rf portrom/images/*.img
     mv -f portrom/images/out/*.img portrom/images/

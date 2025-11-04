@@ -142,14 +142,16 @@ unpack_boot() {
 # $1 boot 解包后的文件夹
 # 将打包至 $1/../out目录下
 repack_boot() {
-    pwd=$(pwd)
-    input_files=$1
-    line=$(basename $input_files)
+    # 声明局部变量
+    local pwd=$(pwd)
+    local input_files=$1
+    local line=$(basename "$input_files")
+    local comp
+    local flag
 
-    cd $input_files
+    cd "$input_files"
     if [ -d ramdisk ]; then
-
-        comp=$(sed -n 2p ../config/${line}_info)
+        comp=$(sed -n 2p "../config/${line}_info")
 
         rm -rf ramdisk.cpio
         cd ramdisk && find | sed 1d | cpio -H newc -R 0:0 -o -F ../ramdisk.cpio >/dev/null 2>&1
@@ -161,7 +163,6 @@ repack_boot() {
             if [ $? = 1 ]; then
                 error "合成ramdisk.cpio失败！"
             fi
-
         fi
     fi
 
@@ -169,14 +170,14 @@ repack_boot() {
         flag="-n"
     fi
 
-    magiskboot repack $flag $line.img new-$line.img >/dev/null 2>&1
+    magiskboot repack $flag "$line.img" "new-$line.img" >/dev/null 2>&1
     rm -rf ramdisk.cpio
 
-    if [ ! -d ../out/ ]; then
-        mkdir ../out
+    if [ ! -d "../out/" ]; then
+        mkdir "../out"
     fi
-    mv -f new-$line.img ../out/$line.img
-    cd $pwd
+    mv -f "new-$line.img" "../out/$line.img"
+    cd "$pwd"
 }
 
 make_super() {
@@ -296,7 +297,7 @@ extract_rom() {
     #存在payload.bin即分解
     file=$(find tmp/extractRom -name "payload.bin")
     if [ "$file" ]; then
-        blue "开始分解 payload.bin包"
+        blue "[payload] 解包 payload.bin"
         #payload-dump tmp/extractRom/payload.bin tmp/extractRom >/dev/null 2>&1 || error "分解 [payload.bin] 时出错"
         payload-dumper-go -c $(nproc) -o tmp/extractRom tmp/extractRom/payload.bin >/dev/null 2>&1 || error "分解 [payload.bin] 时出错"
         rm -r tmp/extractRom/payload.bin
@@ -307,7 +308,7 @@ extract_rom() {
     if [ "$file" ]; then
         cd tmp/extractRom
         for i in $(ls *.new.dat.br); do
-            blue "[br]分解 $i ..."
+            blue "[br] 分解 $i ..."
             line=$(basename $i .new.dat.br)
             brotli -d $i
             rm -r $i
@@ -327,14 +328,14 @@ extract_rom() {
     #分解super.zst
     file=$(find tmp/extractRom -name "*super*")
     if [ "$file" ] && [ $(gettype.py $file) = zst ]; then
-        blue "[zst]解压 $file ..."
+        blue "[zst] 解压 $file ..."
         zstd --rm -d $file -o tmp/extractRom/super.img >>/dev/null 2>&1
     fi
 
     #分解super.img
     file=$(find tmp/extractRom -name "super.*")
     if [ "$file" ] && [ $(gettype.py $file) = super ]; then
-        blue "[super]解压 $file ..."
+        blue "[super] 解压 $file ..."
         rm -rf tmp/extractRom/super
         mkdir tmp/extractRom/super
         lpunpack.py $file tmp/extractRom/super >>/dev/null 2>&1 || (
@@ -478,71 +479,76 @@ patch_smali() {
 # $1 镜像输入
 # $2 解包至
 extract_img() {
-
+# $2 解包至
+extract_img() {
     # 由环境变量extract_img 来决定是否分解镜像
     if [ ! $extract_img = true ]; then
         mv $1 $2
         return
     fi
 
-    part_img=$1
-    part_name=$(basename ${part_img})
+    # 声明局部变量
+    local part_img=$1
+    local part_name=$(basename "${part_img}")
+    local name=$(echo "$part_name" | awk -F'.' '{print $1}')
+    local target_dir=$2
+    local type
+    local new_file
+    local noecho="boot vendor_boot"
+    local i
 
-    name=$(echo $part_name | awk -F'.' '{print $1}')
-    target_dir=$2
+    if [ -f "${part_img}" ]; then
+        rm -rf "$target_dir/$name"
+        type=$(gettype.py "${part_img}")
 
-    if [ -f ${part_img} ]; then
-        rm -rf target_dir/$name
-        type=$(gettype.py ${part_img})
-
-        if [ $type = sparse ]; then
+        if [ "$type" = sparse ]; then
             blue "[$type] ${part_img} unsparse format..."
-            new_file=$(dirname $part_img)/${name}_raw.img
-            simg2img ${part_img} $new_file
-            rm -r $part_img
-            mv $new_file $part_img
-            extract_img $part_img $target_dir
+            new_file=$(dirname "$part_img")/${name}_raw.img
+            simg2img "${part_img}" "$new_file"
+            rm -r "$part_img"
+            mv "$new_file" "$part_img"
+            extract_img "$part_img" "$target_dir"
             return
         fi
 
-        if [ ! $type = unknow ]; then
+        if [ ! "$type" = unknow ]; then
             blue "[$type] ${part_img} -> ${target_dir}/$name"
         else
             error "暂不支持分解 ${part_img}"
         fi
 
-        if [ $type = "ext" ]; then
-            imgextractor.py ${part_img} ${target_dir} >/dev/null 2>&1 || {
+        if [ "$type" = "ext" ]; then
+            imgextractor.py "${part_img}" "${target_dir}" >/dev/null 2>&1 || {
                 error "分解 ${part_name} 失败" "Extracting ${part_name} failed."
                 exit 1
             }
-        elif [ $type = "erofs" ]; then
-            extract.erofs -x -i ${part_img} -o $target_dir >/dev/null 2>&1 || {
+        elif [ "$type" = "erofs" ]; then
+            extract.erofs -x -i "${part_img}" -o "$target_dir" >/dev/null 2>&1 || {
                 error "分解 ${part_name} 失败" "Extracting ${part_name} failed."
                 exit 1
             }
-        elif [ $type = "boot" ] || [ $type = "vendor_boot" ]; then
+        elif [ "$type" = "boot" ] || [ "$type" = "vendor_boot" ]; then
             unpack_boot "$part_img" "$target_dir"
         else
             error "无法识别img文件类型，请检查" "Unable to handle img, exit."
             exit 1
         fi
 
-        if [ -d $target_dir/$name ]; then
+        if [ -d "$target_dir/$name" ]; then
             green "[$type] ${part_img} extracted."
         fi
         if [ ! -d "$target_dir/config" ]; then
-            mkdir $target_dir/config
+            mkdir "$target_dir/config"
         fi
 
         noecho="boot vendor_boot" #因为分解boot的函数已经执行过了 由于特殊性不能统一在此
         for i in $noecho; do
-            if [ $type = $i ]; then
+            if [ "$type" = "$i" ]; then
                 return
             fi
         done
 
-        echo $type >$target_dir/config/${name}_info
+        echo "$type" >"$target_dir/config/${name}_info"
 
     else
         yellow "$part_img 不存在"
@@ -553,83 +559,92 @@ extract_img() {
 # $2 erofs/ext 指定打包类型 没有则是解包时类型
 # 将打包至 $1/../out目录下
 repack_img() {
-    input_file=$1
-    name=$(basename $input_file)
-    img_out="$input_file/../out/$name.img"
+    # 声明局部变量
+    local input_file=$1
+    local name=$(basename "$input_file")
+    local img_out="$input_file/../out/$name.img"
+    local type
+    local fs="$input_file/../config/${name}_fs_config"
+    local file="$input_file/../config/${name}_file_contexts"
+    local is=0
+    local is1=0
+    local i
+    local mount_dir
+    local UTC
+    local size_now
+    local size
+    local xx=0
 
-    type=$(sed -n 1p $input_file/../config/${name}_info)
-    fs=$input_file/../config/${name}_fs_config
-    file=$input_file/../config/${name}_file_contexts
+    mkdir -p tmp/repack_img
+    type=$(sed -n 1p "$input_file/../config/${name}_info")
 
     # 判断$2 是否有输入 并...
-    is=0
-    is1=0
-    if [ "$2" ] && [ $2 != auto ]; then
+    if [ "$2" ] && [ "$2" != auto ]; then
         for i in "ext" "erofs"; do # 可以互相自定义转换的两个类型
-            if [ $type = $i ]; then
+            if [ "$type" = "$i" ]; then
                 is=1
             fi
-            if [ $2 = $i ]; then
+            if [ "$2" = "$i" ]; then
                 is1=1
             fi
         done
-        if [ $is = 1 ] && [ $is1 = 1 ]; then
+        if [ "$is" = 1 ] && [ "$is1" = 1 ]; then
             type=$2
         fi
     fi
 
-    if [ ! -d $input_file/../out ]; then
-        mkdir $input_file/../out
+    if [ ! -d "$input_file/../out" ]; then
+        mkdir "$input_file/../out"
     fi
 
     blue "[$type] $input_file -> $name.img"
 
-    if [ -f $fs -a -f $file ]; then
-        fspatch.py $input_file $fs >/dev/null 2>&1 || (
+    if [ -f "$fs" ] && [ -f "$file" ]; then
+        fspatch.py "$input_file" "$fs" >/dev/null 2>&1 || (
             error "fspatch error"
             exit 1
         )
-        contextpatch.py $input_file $file >/dev/null 2>&1 || (
+        contextpatch.py "$input_file" "$file" >/dev/null 2>&1 || (
             error "contextpatch error"
             exit 1
         )
     fi
 
-    if [ -f $input_file/$name/build.prop ]; then
+    if [ -f "$input_file/$name/build.prop" ]; then
         mount_dir="/"
     else
         mount_dir="/$name"
     fi
     UTC=$(date -u +%s)
 
-    if [ $type = "erofs" ]; then
-        mkfs.erofs -zlz4hc,1 -T $UTC --mount-point=/$name --fs-config-file=$fs --file-contexts=$file $img_out $input_file >/dev/null 2>&1 || rm -rf $img_out
-    elif [ $type = "ext" ]; then
+    if [ "$type" = "erofs" ]; then
+        mkfs.erofs -zlz4hc,1 -T "$UTC" --mount-point="/$name" --fs-config-file="$fs" --file-contexts="$file" "$img_out" "$input_file" > "tmp/repack_img/$name.log" 2>&1 || (rm -rf "$img_out" ; cat "tmp/repack_img/$name.log")
+    elif [ "$type" = "ext" ]; then
         if [[ "$OSTYPE" == "darwin"* ]]; then
-            size_now=$(find $input_file | xargs stat -f%z | awk ' {s+=$1} END { print s }')
+            size_now=$(find "$input_file" | xargs stat -f%z | awk ' {s+=$1} END { print s }')
         else
-            size_now=$(du -sb $input_file | tr -cd 0-9)
+            size_now=$(du -sb "$input_file" | tr -cd 0-9)
         fi
 
-        size="$(($size_now / 4096))"
+        size="$(("$size_now" / 4096))"
         xx=0
         while true; do
-            if [ $xx = "30" ]; then
+            if [ "$xx" = "30" ]; then
                 yellow "ext尝试第30次打包..."
-                mke2fs -O ^has_journal -L $input_file -I 256 -i 102400 -M $mount_dir -m 0 -t ext4 -b 4096 $img_out $size
-                e2fsdroid -e -T $UTC -C $fs -S $file -f $input_file -a /$name $img_out || rm -rf $img_out
+                mke2fs -O ^has_journal -L "$input_file" -I 256 -i 102400 -M "$mount_dir" -m 0 -t ext4 -b 4096 "$img_out" "$size"
+                e2fsdroid -e -T "$UTC" -C "$fs" -S "$file" -f "$input_file" -a "/$name" "$img_out" || rm -rf "$img_out"
                 break
             fi
-            mke2fs -O ^has_journal -L $input_file -I 256 -i 102400 -M $mount_dir -m 0 -t ext4 -b 4096 $img_out $size >/dev/null 2>&1
-            e2fsdroid -e -T $UTC -C $fs -S $file -f $input_file -a /$name $img_out >/dev/null 2>&1 || rm -rf $img_out
-            if [ ! -f $img_out ]; then
-                size=$(($size + 1024))
-                xx=$(($xx + 1))
+            mke2fs -O ^has_journal -L "$input_file" -I 256 -i 102400 -M "$mount_dir" -m 0 -t ext4 -b 4096 "$img_out" "$size" >/dev/null 2>&1
+            e2fsdroid -e -T "$UTC" -C "$fs" -S "$file" -f "$input_file" -a "/$name" "$img_out" >/dev/null 2>&1 || rm -rf "$img_out"
+            if [ ! -f "$img_out" ]; then
+                size=$(("$size" + 1024))
+                xx=$(("$xx" + 1))
             else
                 break
             fi
         done
-    elif [ $type = "boot" ] || [ $type = "vendor_boot" ]; then
+    elif [ "$type" = "boot" ] || [ "$type" = "vendor_boot" ]; then
         repack_boot "$input_file"
     fi
     if [ -f "$img_out" ]; then
