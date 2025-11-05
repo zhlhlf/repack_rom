@@ -114,6 +114,7 @@ else
     for im in $super_list; do
         extract_img baserom/images/$im.img portrom/images &
     done
+    sleep 5 &
     wait
 
     for im in $super_list; do
@@ -244,7 +245,7 @@ green "---------------------"
 #多线程压缩 加快速度
 7z a -tzip -mmt=on out.zip * >>/dev/null
 
-time=$(date +"%Y-%m-%d")
+time=$(date +"%Y%m%d")
 hash=$(md5sum out.zip | head -c 5)
 
 base_rom_version=$(echo $base_rom_version | sed s/[^0-9.A-Z]//g)
