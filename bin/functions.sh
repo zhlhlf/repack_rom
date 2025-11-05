@@ -899,15 +899,18 @@ de() {
 }
 
 del_app() {
-    i=$1
-    apk_dir=$(ls $i/*apk | cut -d' ' -f 1)
-    apk_info=$(java -jar $APKEditor info -i $apk_dir)
-    package_name=$(java -jar $APKEditor info -i $apk_dir | grep package | cut -d \" -f 2)
-    app_name=$(java -jar $APKEditor info -i $apk_dir | grep AppName | cut -d \" -f 2)
+    local i=$1
+    local apk_dir=$(ls "$i"/*apk | head -n1)  # 使用head更安全
+    local apk_info=$(java -jar "$APKEditor" info -i "$apk_dir")
+    local package_name app_name out
+    
+    package_name=$(echo "$apk_info" | grep package | cut -d\" -f2)
+    app_name=$(echo "$apk_info" | grep AppName | cut -d\" -f2)
     out="删除 $i \t\t $package_name($app_name) \t\t $2"
+    
     echo -e "$out" >>../../../del_app-by-zhlhlf.txt
     echo -e "$out"
-    rm -rf $i
+    rm -rf "$i"
 }
 
 keep-del-app() {
