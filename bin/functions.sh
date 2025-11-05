@@ -483,6 +483,7 @@ patch_smali() {
 extract_img() {
     # 由环境变量extract_img 来决定是否分解镜像
     if [ ! $extract_img = true ]; then
+        sleep 5
         mv $1 $2
         return
     fi

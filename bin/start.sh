@@ -114,7 +114,6 @@ else
     for im in $super_list; do
         extract_img baserom/images/$im.img portrom/images &
     done
-    sleep 5 &
     wait
 
     for im in $super_list; do
