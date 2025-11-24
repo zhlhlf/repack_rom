@@ -208,7 +208,7 @@ if [ $make_super = true ]; then
     zstd portrom/images/super.img -o out/images/super.zst
 
     for i in $super_list super; do
-        rm -rf portrom/images/$i*
+        rm -rf portrom/images/$i.img
     done
 fi
 
