@@ -211,12 +211,12 @@ make_super() {
         sSize=$(echo "$sSize+$img_size" | bc)
         blue "Super sub-partition [$image] size: [$img_size]"
     done
-    yellow "super_type: $super_type  slot: $super_slot  allSize: $sSize"
 
     if [ -z $super_size ];then
         super_size=$(echo "$sSize / 1048576 * 1048576 + 1048576 * 16" | bc)
-        green "自动计算 super_size: $super_size"
+        green "没有super_size定义 使用自动计算 super_size: $super_size"
     fi
+    yellow "super_type: $super_type slot: $super_slot allSize: $sSize super_size: $super_size"
 
     argvs+="--device super:$super_size "
     groupSize=$(echo "$super_size-1048576" | bc)
