@@ -1,0 +1,14 @@
+# ROM 包（体积巨大，禁止提交）
+*.rom
+base.rom
+port.rom
+
+# 解包 / 打包产物
+baserom/
+portrom/
+out/
+tmp/
+
+# 运行时日志与输出
+nohup.out
+*.log
