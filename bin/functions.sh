@@ -1,6 +1,7 @@
 #!/bin/bash
 
 TZ='Asia/Shanghai'
+export TZ
 
 work_dir=$(pwd)
 
@@ -11,14 +12,14 @@ error() {
     if [ "$#" -eq 2 ]; then
 
         if [[ "$LANG" == zh_CN* ]]; then
-            echo -e \[$(date +%m%d-%T)\] "\033[1;31m"$1"\033[0m"
+            echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;31m"$1"\033[0m"
         elif [[ "$LANG" == en* ]]; then
             echo -e \[$(date +%m%d-%T)\] "\033[1;31m"$2"\033[0m"
         else
             echo -e \[$(date +%m%d-%T)\] "\033[1;31m"$2"\033[0m"
         fi
     elif [ "$#" -eq 1 ]; then
-        echo -e \[$(date +%m%d-%T)\] "\033[1;31m"$1"\033[0m"
+        echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;31m"$1"\033[0m"
     else
         echo "Usage: error <Chinese> <English>"
     fi
@@ -28,14 +29,14 @@ yellow() {
     if [ "$#" -eq 2 ]; then
 
         if [[ "$LANG" == zh_CN* ]]; then
-            echo -e \[$(date +%m%d-%T)\] "\033[1;33m"$1"\033[0m"
+            echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;33m"$1"\033[0m"
         elif [[ "$LANG" == en* ]]; then
             echo -e \[$(date +%m%d-%T)\] "\033[1;33m"$2"\033[0m"
         else
             echo -e \[$(date +%m%d-%T)\] "\033[1;33m"$2"\033[0m"
         fi
     elif [ "$#" -eq 1 ]; then
-        echo -e \[$(date +%m%d-%T)\] "\033[1;33m"$1"\033[0m"
+        echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;33m"$1"\033[0m"
     else
         echo "Usage: yellow <Chinese> <English>"
     fi
@@ -45,14 +46,14 @@ blue() {
     if [ "$#" -eq 2 ]; then
 
         if [[ "$LANG" == zh_CN* ]]; then
-            echo -e \[$(date +%m%d-%T)\] "\033[1;34m"$1"\033[0m"
+            echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;34m"$1"\033[0m"
         elif [[ "$LANG" == en* ]]; then
             echo -e \[$(date +%m%d-%T)\] "\033[1;34m"$2"\033[0m"
         else
             echo -e \[$(date +%m%d-%T)\] "\033[1;34m"$2"\033[0m"
         fi
     elif [ "$#" -eq 1 ]; then
-        echo -e \[$(date +%m%d-%T)\] "\033[1;34m"$1"\033[0m"
+        echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;34m"$1"\033[0m"
     else
         echo "Usage: blue <Chinese> <English>"
     fi
@@ -61,14 +62,14 @@ blue() {
 green() {
     if [ "$#" -eq 2 ]; then
         if [[ "$LANG" == zh_CN* ]]; then
-            echo -e \[$(date +%m%d-%T)\] "\033[1;32m"$1"\033[0m"
+            echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;32m"$1"\033[0m"
         elif [[ "$LANG" == en* ]]; then
             echo -e \[$(date +%m%d-%T)\] "\033[1;32m"$2"\033[0m"
         else
             echo -e \[$(date +%m%d-%T)\] "\033[1;32m"$2"\033[0m"
         fi
     elif [ "$#" -eq 1 ]; then
-        echo -e \[$(date +%m%d-%T)\] "\033[1;32m"$1"\033[0m"
+        echo -e \[$(date +%Y-%m-%d\ %H:%M:%S)\] "\033[1;32m"$1"\033[0m"
     else
         echo "Usage: green <Chinese> <English>"
     fi
@@ -247,16 +248,30 @@ make_super() {
 }
 
 download_rom() {
-    if [ ! -f "$1" ] && [ "$(echo $2 | grep http)" != "" ]; then
-        blue "正在下载 $1"
-        aria2c --max-download-limit=1024M --file-allocation=none -s10 -x10 -j10 "$2" -o $1
-        if [ ! -f "$1" ]; then
-            error "下载错误"
+    local rom_file="$1"
+    local rom_url="$2"
+    local required="$3"
+
+    if [ -f "$rom_file" ]; then
+        green "已存在包: $rom_file"
+        return 0
+    fi
+
+    if [ "$(echo "$rom_url" | grep -E '^https?://')" != "" ]; then
+        blue "正在下载 $rom_file"
+        aria2c --max-download-limit=1024M --file-allocation=none -s10 -x10 -j10 "$rom_url" -o "$rom_file"
+        if [ ! -f "$rom_file" ]; then
+            error "下载 $rom_file 失败，终止"
+            exit 1
         fi
-    elif [ -f "$1" ]; then
-        green "已存在包: $1"
+        return 0
+    fi
+
+    if [ "$required" = "true" ]; then
+        error "缺少必需包 $rom_file，且未提供有效下载链接，终止"
+        exit 1
     else
-        yellow "本地尚未存在 并且传入参数并不是下载链接 终止"
+        yellow "$rom_file 不存在且无有效下载链接，将跳过该包"
     fi
 }
 

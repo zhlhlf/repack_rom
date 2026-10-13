@@ -25,10 +25,10 @@ portromUrl="$2"
 baserom=base.rom
 portrom=port.rom
 
-# 下载底包
-download_rom "${baserom}" "${baseromUrl}"
-# 下载移植包
-download_rom "${portrom}" "${portromUrl}"
+# 下载底包（必需）
+download_rom "${baserom}" "${baseromUrl}" true
+# 下载移植包（可选，用于移植模式）
+download_rom "${portrom}" "${portromUrl}" false
 
 # 提取底包中所有镜像
 extract_rom ${baserom} baserom/images/
