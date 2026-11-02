@@ -197,7 +197,7 @@ if [ $extract_img = true ]; then
 
     # 打包各镜像img
     mkdir -p portrom/images/out
-    for i in $(ls portrom/images --hide config); do
+    for i in $(ls portrom/images --hide config --hide out); do
         repack_img "portrom/images/$i" $pack_type &
     done
     wait
