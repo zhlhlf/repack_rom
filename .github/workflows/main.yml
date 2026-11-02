@@ -55,15 +55,13 @@ jobs:
           with:
             fetch-depth: 1
 
-        - name: 操作
-          run: |  
+        - name: 安装系统依赖并同步 uv 环境
+          run: |
               df -h ./
-              # 创建命名管道
-              export env_yes="$(pwd)/env_yes"
-              echo "setup进程节点管道路径 $env_yes"
-              sudo mkfifo $env_yes
-              sudo bash bin/setup.sh > /dev/null 2>&1 && sudo echo 1 > $env_yes &
+              sudo bash bin/setup.sh
 
+        - name: 操作
+          run: |
               cat > zhlhlf0.sh <<endl
               ${{ inputs.patch_shell0 }}
               endl
@@ -75,9 +73,9 @@ jobs:
               cat > zhlhlf2.sh <<endl
               ${{ inputs.patch_shell2 }}
               endl
-              
+
               sudo bash bin/start.sh "${{ inputs.rom1 }}" "${{ inputs.rom2 }}"
- 
+
               mkdir 666
               sudo mv `find out -name "*zip"` 666/"${{ inputs.zip_name }}"
               

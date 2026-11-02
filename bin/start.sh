@@ -128,9 +128,6 @@ else
         rm -rf baserom/images/$im.img
     done
 
-    # wait for env_yes 管道输入
-    read message < /mnt/repack_rom/env_yes
-
     get_rom_msg portrom/images
 
 fi
