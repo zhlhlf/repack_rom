@@ -916,13 +916,23 @@ de() {
 del_app() {
     local i=$1
     local apk_dir=$(ls "$i"/*apk | head -n1)  # 使用head更安全
-    local apk_info=$(java -jar "$APKEditor" info -i "$apk_dir")
-    local package_name app_name out
-    
-    package_name=$(echo "$apk_info" | grep package | cut -d\" -f2)
-    app_name=$(echo "$apk_info" | grep AppName | cut -d\" -f2)
+    local apk_meta python_bin package_name app_name out
+
+    python_bin="$work_dir/.venv/bin/python"
+    if [ -x "$python_bin" ]; then
+        apk_meta=$("$python_bin" "$work_dir/bin/pys/apk_meta.py" "$apk_dir" 2>/dev/null)
+    else
+        apk_meta=$(uv run --quiet --project "$work_dir" python "$work_dir/bin/pys/apk_meta.py" "$apk_dir" 2>/dev/null)
+    fi
+
+    package_name=${apk_meta%%$'\n'*}
+    app_name=${apk_meta#*$'\n'}
+    if [ "$app_name" = "$apk_meta" ]; then
+        app_name=""
+    fi
+
     out="删除 $i \t\t $package_name($app_name) \t\t $2"
-    
+
     echo -e "$out" >>../../../del_app-by-zhlhlf.txt
     echo -e "$out"
     rm -rf "$i"

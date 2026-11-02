@@ -54,8 +54,10 @@ git clone https://github.com/zhlhlf/android_flash_scripts as --depth=1 ; cp -r a
     # 克隆项目
     git clone https://github.com/zhlhlf/repack_rom_auto
     cd repack_rom_auto
-    # 安装依赖
+    # 安装系统依赖，并通过 uv 安装 Python 依赖
     sudo ./bin/setup.sh
+    # 后续 Python 依赖有变更时只需
+    uv sync
     # 开始移植
     sudo ./bin/start.sh <底包路径> <移植包路径>
 ```

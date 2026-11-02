@@ -1,6 +1,14 @@
 #!/bin/bash
 
 work_dir=$(pwd)
+
+if [ -f "$work_dir/.venv/bin/activate" ]; then
+    . "$work_dir/.venv/bin/activate"
+else
+    echo "未找到 .venv，请先运行 ./bin/setup.sh 或 uv sync"
+    exit 1
+fi
+
 tools_dir=${work_dir}/bin/$(uname)/$(uname -m)
 export PATH=$PATH:$(pwd)/bin/pys:$(pwd)/bin/$(uname)/$(uname -m)/
 chmod 777 * -R

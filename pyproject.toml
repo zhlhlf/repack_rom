@@ -1,0 +1,9 @@
+[project]
+name = "repack-rom"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "apk-info>=1.0.13",
+]

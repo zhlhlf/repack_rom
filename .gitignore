@@ -12,3 +12,8 @@ tmp/
 # 运行时日志与输出
 nohup.out
 *.log
+
+# Python / uv
+.venv/
+__pycache__/
+*.py[cod]
