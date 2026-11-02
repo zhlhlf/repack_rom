@@ -911,10 +911,15 @@ de() {
     fi
 }
 
-del_app() {
+get_apk_info() {
     local i=$1
-    local apk_dir=$(ls "$i"/*apk | head -n1)  # 使用head更安全
-    local apk_meta python_bin package_name app_name out
+    local apk_dir apk_meta python_bin package_name app_name
+
+    apk_dir=$(find "$i" -maxdepth 1 -type f -iname '*.apk' -print -quit 2>/dev/null)
+    if [ -z "$apk_dir" ]; then
+        echo "unknown(unknown)"
+        return
+    fi
 
     python_bin="$work_dir/.venv/bin/python"
     if [ -x "$python_bin" ]; then
@@ -929,7 +934,17 @@ del_app() {
         app_name=""
     fi
 
-    out="删除 $i \t\t $package_name($app_name) \t\t $2"
+    [ -n "$package_name" ] || package_name="unknown"
+    [ -n "$app_name" ] || app_name="unknown"
+    echo "$package_name($app_name)"
+}
+
+del_app() {
+    local i=$1
+    local apk_info out
+
+    apk_info=$(get_apk_info "$i")
+    out="删除 $i \t\t $apk_info \t\t $2"
 
     echo -e "$out" >>../../../del_app-by-zhlhlf.txt
     echo -e "$out"
@@ -941,7 +956,7 @@ keep-del-app() {
     for i in $(find */*del-app*/* -maxdepth 0); do
         uu=$(echo "$1" | grep -i $(basename $i))
         if [ "$uu" ]; then
-            echo "    保留--- $i"
+            echo -e "    保留--- $i \t\t $(get_apk_info "$i")"
         else
             del_app $i
         fi
@@ -952,7 +967,7 @@ keep-del-app() {
         for i in $(find reserve/*/*app*/* -maxdepth 0); do
             uu=$(echo "$1" | grep -i $(basename $i))
             if [ "$uu" ]; then
-                echo "    保留--- $i"
+                echo -e "    保留--- $i \t\t $(get_apk_info "$i")"
                 name=$(basename $(ls $i))
                 echo "name=\"$name\" info_1=\"0\" info_2=\"0\" location=\"del-app/$(basename $i)/$name\"" >>my_bigball/apkcerts.txt
                 mv $i my_bigball/del-app/

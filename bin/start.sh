@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# 执行前载入完整快照，避免脚本运行期间被更新导致语法解析错误
+if [ "${REPACK_ROM_START_SNAPSHOT:-0}" != "1" ]; then
+    REPACK_ROM_START_SNAPSHOT=1 exec bash -c "$(cat "$0")" "$0" "$@"
+fi
+
 work_dir=$(pwd)
 
 if [ -f "$work_dir/.venv/bin/activate" ]; then
