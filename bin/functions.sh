@@ -359,7 +359,7 @@ extract_rom() {
             error "[super] 分解失败"
             exit 1
         )
-        rm -r $file tmp/extractRom/super/*-cow.img
+        rm -rf $file tmp/extractRom/super/*-cow.img
         for i in $(ls tmp/extractRom/super/*); do
             dataSize=$(du $i | cut -f 1)
             if [ $dataSize = 0 ]; then
@@ -609,9 +609,7 @@ repack_img() {
         fi
     fi
 
-    if [ ! -d "$input_file/../out" ]; then
-        mkdir "$input_file/../out"
-    fi
+    mkdir -p "$input_file/../out"
 
     blue "[$type] $input_file -> $name.img"
 
