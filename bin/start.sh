@@ -253,7 +253,7 @@ du -h $(find -type f)
 green "---------------------"
 
 #多线程压缩 加快速度
-7z a -tzip -mmt=on out.zip * >>/dev/null
+7z a -tzip -mmt=$(nproc) out.zip * >>/dev/null
 
 time=$(date +"%Y%m%d")
 hash=$(md5sum out.zip | head -c 5)
