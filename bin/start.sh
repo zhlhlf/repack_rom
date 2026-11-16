@@ -268,4 +268,6 @@ fi
 
 cd ..
 green "输出包路径："
-green $(ls out/*.zip)
+for zip_file in out/*.zip; do
+    green "$zip_file  $(du -sh "$zip_file" | cut -f1)"
+done
